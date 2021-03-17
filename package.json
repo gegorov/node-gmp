@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "nodejs gmp sandbox",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "task1-1": "nodemon task1/task1-1.js",
@@ -22,6 +23,9 @@
   },
   "homepage": "https://github.com/gegorov/node-gmp#readme",
   "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/node": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
