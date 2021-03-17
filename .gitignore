@@ -1,0 +1,5 @@
+# ignore black hole as usual
+node_modules
+
+# mac specific garbage
+.DS_Store
