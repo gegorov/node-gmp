@@ -12,5 +12,6 @@ module.exports = {
   },
   rules: {
     'no-underscore-dangle': ['error', { allow: ['__dirname', '__filename'] }],
+    'import/prefer-default-export': 0,
   },
 };
