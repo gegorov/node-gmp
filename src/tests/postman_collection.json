@@ -247,13 +247,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_API_URL}}/user/d8b8c9e8-0125-46f3-81d1-73c6c013c8dd",
+							"raw": "{{BASE_API_URL}}/user/7eb6823a-b285-49bf-8df5-e4f3b557b51e",
 							"host": [
 								"{{BASE_API_URL}}"
 							],
 							"path": [
 								"user",
-								"d8b8c9e8-0125-46f3-81d1-73c6c013c8dd"
+								"7eb6823a-b285-49bf-8df5-e4f3b557b51e"
 							]
 						}
 					},
@@ -296,6 +296,13 @@
 					],
 					"path": [
 						"user"
+					],
+					"query": [
+						{
+							"key": "",
+							"value": null,
+							"disabled": true
+						}
 					]
 				}
 			},
@@ -363,7 +370,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{BASE_API_URL}}/users?q=l&limit=100",
+					"raw": "{{BASE_API_URL}}/users?q=k&limit=100",
 					"host": [
 						"{{BASE_API_URL}}"
 					],
@@ -373,12 +380,57 @@
 					"query": [
 						{
 							"key": "q",
-							"value": "l"
+							"value": "k"
 						},
 						{
 							"key": "limit",
 							"value": "100"
 						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete user raw",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_API_URL}}/user/bf4f7802-19a9-49d2-8e47-d04929f98b1f",
+					"host": [
+						"{{BASE_API_URL}}"
+					],
+					"path": [
+						"user",
+						"bf4f7802-19a9-49d2-8e47-d04929f98b1f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "raw put user",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"password\": \"updated45password\",\n    \"login\": \"updated ololo\",\n    \"age\": \"42\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_API_URL}}/user/9311a568-6be5-44c2-aef0-9c31f326c9b9",
+					"host": [
+						"{{BASE_API_URL}}"
+					],
+					"path": [
+						"user",
+						"9311a568-6be5-44c2-aef0-9c31f326c9b9"
 					]
 				}
 			},
