@@ -1,6 +1,6 @@
 import './config';
 import express from 'express';
-import { sequelize } from './helpers/database';
+import { sequelize } from './helpers';
 import userRouter from './routes/user-router';
 
 const port = process.env.APP_PORT;

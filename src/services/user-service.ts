@@ -1,6 +1,6 @@
 import Sequelize, { Op } from 'sequelize';
 import colors from 'colors/safe';
-import { searchMapper } from '../helpers/search';
+import { searchMapper } from '../helpers';
 import { UserInstance, UserCreationAttributes, SearchUsersResponse } from '../types';
 
 export class UserService {

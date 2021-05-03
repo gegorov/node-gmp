@@ -1,7 +1,7 @@
 import express from 'express';
 import { createValidator } from 'express-joi-validation';
-import * as userController from '../controllers/user-controller';
-import * as schemas from '../models/validation';
+import { userController } from '../controllers';
+import * as schemas from '../models';
 
 const route = express.Router();
 const validator = createValidator({

@@ -1,4 +1,4 @@
-import { UserInstance, SearchUsersResponse } from '../types/User';
+import { UserInstance, SearchUsersResponse } from '../types';
 
 export function searchMapper({
   rows,

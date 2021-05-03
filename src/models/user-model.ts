@@ -1,6 +1,6 @@
 import Sequelize, { DataTypes } from 'sequelize';
 import { UserInstance } from 'types';
-import { sequelize } from '../helpers/database';
+import { sequelize } from '../helpers';
 
 export const User = sequelize.define<UserInstance>('user', {
   id: {
