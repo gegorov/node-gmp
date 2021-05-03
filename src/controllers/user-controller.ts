@@ -1,60 +1,102 @@
 import { Request, Response, RequestHandler } from 'express';
+import { Op } from 'sequelize';
 import { ValidatedRequest, ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
-import * as helpers from '../helpers/index';
-import { User, UserPostRequestSchema, UsersGetRequestSchema } from '../types';
+import { User } from '../models/user';
+import { UserPostRequestSchema, UsersGetRequestSchema } from '../types';
 
-const users: User[] = [];
+export const getUser:RequestHandler = async (req, res) => {
+  const { id } = req.params;
 
-export const getUser:RequestHandler = (req, res) => {
-  const user = users.find((u) => u.id === req.params.id);
+  try {
+    const user = await User.findByPk(id);
 
-  if (!user) {
-    res.status(404).send(`User with id: ${req.params.id} not found`);
+    if (!user) {
+      return res.status(404).send(`User with id: ${id} not found`);
+    }
+
+    return res.json(user);
+  } catch (error) {
+    console.error(error);
+
+    return res.sendStatus(500);
   }
-
-  return res.json(user);
 };
 
-export const postUser:RequestHandler = (req: Request, res: Response) => {
+export const postUser:RequestHandler = async (req: Request, res: Response) => {
   const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
   const { login, password, age } = vreq.body;
-  const user = helpers.createUser(login, password, age);
-  users.push(user);
 
-  return res.json(user);
-};
+  try {
+    const user = await User.create({ login, password, age });
+    console.log(`user ${user.login} created, id: ${user.id}`);
 
-export const deleteUser: RequestHandler = (req: Request, res: Response) => {
-  const user = users.find((u) => u.id === req.params.id);
-
-  if (!user) {
-    return res.status(404).send(`User with id: ${req.params.id} not found`);
+    return res.json(user);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
   }
-
-  user.isDeleted = true;
-
-  return res.sendStatus(200);
 };
 
-export const updateUser: RequestHandler = (req: Request, res: Response) => {
-  const user = users.find((u) => u.id === req.params.id);
+export const deleteUser: RequestHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
 
-  if (!user) {
-    return res.status(404).send(`User with id: ${req.params.id} not found`);
+  try {
+    const user = await User.findByPk(id);
+
+    if (!user || user.isDeleted) {
+      return res.status(404).send(`User with id: ${id} not found`);
+    }
+
+    user.set('isDeleted', true);
+    const updated = await user.save();
+
+    return res.json(updated);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
   }
-
-  const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
-  const updatedUser = helpers.updateUser(user, vreq.body);
-  const userIndex = users.findIndex((u) => u.id === req.params.id);
-  users[userIndex] = updatedUser;
-
-  return res.json(updatedUser);
 };
 
-export const searchUsers = (req: ValidatedRequest<UsersGetRequestSchema>, res: Response) => {
+export const updateUser: RequestHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).send(`User with id: ${id} not found`);
+    }
+
+    user.set(vreq.body);
+    const updatedUser = await user.save();
+
+    return res.json(updatedUser);
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
+};
+
+export const searchUsers = async (req: ValidatedRequest<UsersGetRequestSchema>, res: Response) => {
   const { q, limit = 10 } = req.query;
 
-  const filteredUsers = helpers.getAutoSuggestUsers(users, q, limit);
+  try {
+    const result = await User.findAndCountAll({
+      limit,
+      where: {
+        login: {
+          [Op.iLike]: `%${q}%`,
+        },
+      },
+    });
 
-  return res.json(filteredUsers);
+    return res.json({
+      total: result.count,
+      users: result.rows,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.sendStatus(500);
+  }
 };

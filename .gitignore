@@ -3,3 +3,6 @@ node_modules
 
 # mac specific garbage
 .DS_Store
+
+# env
+.env
