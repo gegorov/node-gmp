@@ -240,7 +240,12 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "raw calls",
+			"item": [
 				{
 					"name": "get user raw",
 					"request": {
@@ -258,22 +263,53 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "raw put user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"updated45password\",\n    \"login\": \"updated ololo\",\n    \"age\": \"42\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_API_URL}}/user/9311a568-6be5-44c2-aef0-9c31f326c9b9",
+							"host": [
+								"{{BASE_API_URL}}"
+							],
+							"path": [
+								"user",
+								"9311a568-6be5-44c2-aef0-9c31f326c9b9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user raw",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_API_URL}}/user/bf4f7802-19a9-49d2-8e47-d04929f98b1f",
+							"host": [
+								"{{BASE_API_URL}}"
+							],
+							"path": [
+								"user",
+								"bf4f7802-19a9-49d2-8e47-d04929f98b1f"
+							]
+						}
+					},
+					"response": []
 				}
 			]
-		},
-		{
-			"name": "root hello",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{BASE_API_URL}}",
-					"host": [
-						"{{BASE_API_URL}}"
-					]
-				}
-			},
-			"response": []
 		},
 		{
 			"name": "post user",
@@ -282,7 +318,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"login\": \"alpha\",\n    \"password\": \"test123\",\n    \"age\": 32\n}",
+					"raw": "{\n    \"login\": \"alpha232\",\n    \"password\": \"test123\",\n    \"age\": 32\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -392,45 +428,17 @@
 			"response": []
 		},
 		{
-			"name": "delete user raw",
+			"name": "get all users",
 			"request": {
-				"method": "DELETE",
+				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{BASE_API_URL}}/user/bf4f7802-19a9-49d2-8e47-d04929f98b1f",
+					"raw": "{{BASE_API_URL}}/all-users",
 					"host": [
 						"{{BASE_API_URL}}"
 					],
 					"path": [
-						"user",
-						"bf4f7802-19a9-49d2-8e47-d04929f98b1f"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "raw put user",
-			"request": {
-				"method": "PUT",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"password\": \"updated45password\",\n    \"login\": \"updated ololo\",\n    \"age\": \"42\"\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{BASE_API_URL}}/user/9311a568-6be5-44c2-aef0-9c31f326c9b9",
-					"host": [
-						"{{BASE_API_URL}}"
-					],
-					"path": [
-						"user",
-						"9311a568-6be5-44c2-aef0-9c31f326c9b9"
+						"all-users"
 					]
 				}
 			},
