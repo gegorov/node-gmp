@@ -23,4 +23,6 @@ route.delete('/user/:id', validator.params(schemas.paramsSchema), userController
 
 route.get('/users', validator.query(schemas.getUsersSchema), userController.searchUsers);
 
+route.get('/all-users', userController.getAllUsers);
+
 export default route;

@@ -1,5 +1,6 @@
 import Sequelize, { Op } from 'sequelize';
 import colors from 'colors/safe';
+import { searchMapper } from '../helpers/search';
 import { UserInstance, UserCreationAttributes, SearchUsersResponse } from '../types';
 
 export class UserService {
@@ -60,5 +61,10 @@ export class UserService {
         total: count,
         users: rows,
       }));
+  }
+
+  public getAll(): Promise<SearchUsersResponse> {
+    return this.userModel.findAndCountAll()
+      .then(searchMapper);
   }
 }

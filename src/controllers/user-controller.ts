@@ -84,6 +84,12 @@ export const searchUsers = async (req: ValidatedRequest<UsersGetRequestSchema>, 
     return res.sendStatus(500);
   }
 };
+
+export const getAllUsers = async (req: Request, res: Response) => {
+  try {
+    const result = await userService.getAll();
+
+    return res.json(result);
   } catch (error) {
     console.error(error);
     return res.sendStatus(500);
