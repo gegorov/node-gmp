@@ -1,19 +1,6 @@
-import Sequelize, { DataTypes, Model, Optional } from 'sequelize';
+import Sequelize, { DataTypes } from 'sequelize';
+import { UserInstance } from 'types';
 import { sequelize } from '../helpers/database';
-
-interface UserAttributes {
-  id: string;
-  login: string;
-  password: string;
-  age: number;
-  isDeleted: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-}
-
-interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'isDeleted'> {}
-
-interface UserInstance extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
 
 export const User = sequelize.define<UserInstance>('user', {
   id: {
