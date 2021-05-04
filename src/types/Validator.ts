@@ -22,3 +22,9 @@ export interface GroupPostRequestSchema extends ValidatedRequestSchema {
     Permission: Permission[],
   }
 }
+
+export interface GroupToUsersRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Fields]: {
+    users: string[],
+  }
+}

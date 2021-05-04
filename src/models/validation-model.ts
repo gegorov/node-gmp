@@ -22,3 +22,7 @@ export const postGroupSchema = Joi.object({
   name: Joi.string().min(2).required(),
   permissions: Joi.array().items(Joi.string().valid(...validPermissions)),
 });
+
+export const postAddUsersToGroup = Joi.object({
+  users: Joi.array().items(Joi.string().length(36)).unique().min(1),
+});

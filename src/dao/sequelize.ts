@@ -20,3 +20,11 @@ export const Group = sequelize.define<GroupInstance>('group', groupModel, {
   underscored: true,
   timestamps: true,
 });
+
+export const UserGroup = sequelize.define('userGroup', userGroupModel, {
+  underscored: true,
+  timestamps: true,
+});
+
+User.belongsToMany(Group, { through: UserGroup });
+Group.belongsToMany(User, { through: UserGroup });
