@@ -1,8 +1,7 @@
 import Sequelize, { DataTypes } from 'sequelize';
-import { UserInstance } from 'types';
-import { sequelize } from '../helpers';
 
-export const User = sequelize.define<UserInstance>('user', {
+export const userModel = {
+
   id: {
     type: DataTypes.UUID,
     primaryKey: true,
@@ -27,7 +26,4 @@ export const User = sequelize.define<UserInstance>('user', {
   },
   createdAt: Sequelize.DATE,
   updatedAt: Sequelize.DATE,
-}, {
-  underscored: true,
-  timestamps: true,
-});
+};

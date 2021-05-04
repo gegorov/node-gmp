@@ -1,6 +1,6 @@
 import { Request, Response, RequestHandler } from 'express';
 import { ValidatedRequest, ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
-import { User } from '../models';
+import { User } from '../dao/sequelize';
 import { UserPostRequestSchema, UsersGetRequestSchema } from '../types';
 import { UserService } from '../services/user-service';
 

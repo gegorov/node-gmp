@@ -1,10 +1,12 @@
-import Sequelize, { Op } from 'sequelize';
+import { Op } from 'sequelize';
 import colors from 'colors/safe';
 import { searchMapper } from '../helpers';
-import { UserInstance, UserCreationAttributes, SearchUsersResponse } from '../types';
+import {
+  UserInstance, UserCreationAttributes, SearchUsersResponse, UserStatic,
+} from '../types';
 
 export class UserService {
-  constructor(private userModel: Sequelize.ModelCtor<UserInstance>) {
+  constructor(private userModel: UserStatic) {
     this.userModel = userModel;
   }
 

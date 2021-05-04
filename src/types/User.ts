@@ -1,4 +1,4 @@
-import { Model, Optional } from 'sequelize';
+import { BuildOptions, Model, Optional } from 'sequelize';
 
 export interface UserAttributes {
   id: string;
@@ -15,6 +15,9 @@ export interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 
 export interface UserInstance
   extends Model<UserAttributes, UserCreationAttributes>, UserAttributes {}
 
+export type UserStatic = typeof Model & {
+  new (values?: UserCreationAttributes, options?: BuildOptions): UserInstance;
+};
 export interface SearchUsersResponse {
   total: number,
   users: UserInstance[],
