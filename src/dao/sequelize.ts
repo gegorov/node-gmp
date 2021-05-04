@@ -15,3 +15,8 @@ export const User = sequelize.define<UserInstance>('user', userModel, {
   underscored: true,
   timestamps: true,
 });
+
+export const Group = sequelize.define<GroupInstance>('group', groupModel, {
+  underscored: true,
+  timestamps: true,
+});

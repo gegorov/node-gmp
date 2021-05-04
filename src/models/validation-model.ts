@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { Permission } from '../types/Group';
 
 export const postUserSchema = Joi.object({
   login: Joi.string().min(2).required(),
@@ -13,4 +14,11 @@ export const getUsersSchema = Joi.object({
 
 export const paramsSchema = Joi.object({
   id: Joi.string().length(36).required(),
+});
+
+const validPermissions: Permission[] = ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'];
+
+export const postGroupSchema = Joi.object({
+  name: Joi.string().min(2).required(),
+  permissions: Joi.array().items(Joi.string().valid(...validPermissions)),
 });
