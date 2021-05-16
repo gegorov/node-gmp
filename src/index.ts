@@ -1,14 +1,16 @@
 import './config';
 import express from 'express';
-import { sequelize } from './helpers/database';
-import userRouter from './routes/user-router';
+import { sequelize } from './dao/sequelize';
+import userRoutes from './routes/user-routes';
+import groupRoutes from './routes/group-routes';
 
 const port = process.env.APP_PORT;
 const app = express();
 
 app.use(express.json());
 
-app.use(userRouter);
+app.use(userRoutes);
+app.use(groupRoutes);
 
 app.use((req, res) => {
   res.sendStatus(404);
