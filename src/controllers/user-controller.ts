@@ -1,97 +1,87 @@
-import { Request, Response, RequestHandler } from 'express';
+import {
+  Request, Response, RequestHandler, NextFunction,
+} from 'express';
 import { ValidatedRequest, ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
 import { User } from '../dao/sequelize';
+import logger from '../logger';
 import { UserPostRequestSchema, UsersGetRequestSchema } from '../types';
 import { UserService } from '../services/user-service';
 
-const userService = new UserService(User);
+const userService = new UserService(User, logger);
 
-export const getUser:RequestHandler = async (req, res) => {
+export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
     const user = await userService.getById(id);
-
-    if (!user) {
-      return res.status(404).send(`User with id: ${id} not found`);
-    }
-
-    return res.json(user);
+    res.json(user);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in User Controller, method getUser, id: ${id}. ${error.message}`);
+    next(error);
   }
 };
 
-export const postUser:RequestHandler = async (req: Request, res: Response) => {
+export const postUser:RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
   const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
   const { login, password, age } = vreq.body;
 
   try {
     const user = await userService.create({ login, password, age });
-
-    return res.json(user);
+    res.json(user);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in User Controller, method postUser, user: {${login}, ${password}, ${age}}. ${error.message}`);
+    next(error);
   }
 };
 
-export const updateUser: RequestHandler = async (req: Request, res: Response) => {
+export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
     const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
     const updatedUser = await userService.update(id, vreq.body);
-
-    if (!updatedUser) {
-      return res.status(404).send(`User with id: ${id} not found`);
-    }
-
-    return res.json(updatedUser);
+    res.json(updatedUser);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    const { login, password, age } = req.body;
+    logger.error(`Error in User Controller, method updateUser, user: {${id},${login}, ${password}, ${age}}. ${error.message}`);
+    next(error);
   }
 };
 
-export const deleteUser: RequestHandler = async (req: Request, res: Response) => {
+export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
     const user = await userService.delete(id);
-
-    if (!user) {
-      return res.status(404).send(`User with id: ${id} not found or it is already deleted`);
-    }
-
-    return res.json(user);
+    res.json(user);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in User Controller, method deleteUser, user id: ${id}. ${error.message}`);
+    next(error);
   }
 };
 
-export const searchUsers = async (req: ValidatedRequest<UsersGetRequestSchema>, res: Response) => {
+export const searchUsers = async (
+  req: ValidatedRequest<UsersGetRequestSchema>,
+  res: Response,
+  next: NextFunction,
+) => {
   const { q, limit } = req.query;
 
   try {
     const result = await userService.search(q, limit);
-
-    return res.json(result);
+    res.json(result);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in User Controller, method searchUsers, searchQuery ${q}, limit: ${limit}. ${error.message}`);
+    next(error);
   }
 };
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await userService.getAll();
-
-    return res.json(result);
+    res.json(result);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error('Error in User Controller, method getAllUsers');
+    next(error);
   }
 };
