@@ -20,7 +20,7 @@ const validPermissions: Permission[] = ['READ', 'WRITE', 'DELETE', 'SHARE', 'UPL
 
 export const postGroupSchema = Joi.object({
   name: Joi.string().min(2).required(),
-  permissions: Joi.array().items(Joi.string().valid(...validPermissions)),
+  permissions: Joi.array().items(Joi.string().valid(...validPermissions).required()).required(),
 });
 
 export const postAddUsersToGroup = Joi.object({
