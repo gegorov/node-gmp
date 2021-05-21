@@ -1,92 +1,79 @@
-import { Request, Response, RequestHandler } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
 import { GroupService } from '../services/group-service';
 import { Group } from '../dao/sequelize';
+import logger from '../logger';
 import { GroupPostRequestSchema, GroupToUsersRequestSchema } from '../types';
 
-const groupService = new GroupService(Group);
+const groupService = new GroupService(Group, logger);
 
-export const getGroup:RequestHandler = async (req, res) => {
+export const getGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
     const group = await groupService.getById(id);
-
-    if (!group) {
-      return res.status(404).send(`Group with id: ${id} not found`);
-    }
-
-    return res.json(group);
+    res.json(group);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method getGroup, id: ${id}. ${error.message}`);
+    next(error);
   }
 };
 
-export const postGroup:RequestHandler = async (req: Request, res: Response) => {
+export const postGroup = async (req: Request, res: Response, next: NextFunction) => {
   const vreq = req as ValidatedRequestWithRawInputsAndFields<GroupPostRequestSchema>;
   const { name, permissions } = vreq.body;
 
   try {
     const group = await groupService.create({ name, permissions });
-
-    return res.json(group);
+    res.json(group);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method postGroup, name: ${name}, permissions: [${permissions.join(',')}]. ${error.message}`);
+    next(error);
   }
 };
 
-export const updateGroup: RequestHandler = async (req: Request, res: Response) => {
+export const updateGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   try {
     const vreq = req as ValidatedRequestWithRawInputsAndFields<GroupPostRequestSchema>;
     const updatedGroup = await groupService.update(id, vreq.body);
-
-    if (!updatedGroup) {
-      return res.status(404).send(`Group with id: ${id} not found`);
-    }
-
-    return res.json(updatedGroup);
+    res.json(updatedGroup);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method updateGroup, id: ${id}, updatedGroup: [${req.body.name}, ${req.body.permissions.join(',')}]. ${error.message}`);
+    next(error);
   }
 };
 
-export const deleteGroup: RequestHandler = async (req: Request, res: Response) => {
+export const deleteGroup = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   try {
     await groupService.delete(id);
-
-    return res.sendStatus(200);
+    res.sendStatus(200);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method delete, id: ${id}. ${error.message}`);
+    next(error);
   }
 };
 
-export const getAllGroups: RequestHandler = async (req: Request, res: Response) => {
+export const getAllGroups = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await groupService.getAll();
-
-    return res.json(result);
+    res.json(result);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method updateGroup. ${error.message}`);
+    next(error);
   }
 };
 
-export const addUsersToGroup: RequestHandler = async (req: Request, res: Response) => {
+export const addUsersToGroup = async (req: Request, res: Response, next:NextFunction) => {
   const { id } = req.params;
   const vreq = req as ValidatedRequestWithRawInputsAndFields<GroupToUsersRequestSchema>;
   try {
     await groupService.addUsersToGroup(id, vreq.body.users);
-
-    return res.sendStatus(200);
+    res.sendStatus(200);
   } catch (error) {
-    console.error(error);
-    return res.sendStatus(500);
+    logger.error(`Error in Group Controller, method addUsersToGroup, group id: ${id}, users: [${req.body.users.join(',')}]. ${error.message}`);
+    next(error);
   }
 };

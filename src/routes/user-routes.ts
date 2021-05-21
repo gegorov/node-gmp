@@ -6,6 +6,7 @@ import * as schemas from '../models';
 const route = express.Router();
 const validator = createValidator({
   statusCode: 400,
+  passError: true,
 });
 
 route.get('/user/:id', validator.params(schemas.paramsSchema), userController.getUser);
