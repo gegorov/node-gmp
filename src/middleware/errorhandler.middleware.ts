@@ -14,6 +14,18 @@ export function errorHandlerMiddleware(
     return res.status(err.statusCode).json(err.message);
   }
 
+  if (err instanceof HttpError && err.statusCode === 401) {
+    logger.error(`ERROR 401 message: ${err.message}`);
+
+    return res.status(err.statusCode).json('Unauthorized');
+  }
+
+  if (err instanceof HttpError && err.statusCode === 403) {
+    logger.error(`ERROR 403 message: ${err.message}`);
+
+    return res.status(err.statusCode).json('Forbidden');
+  }
+
   if (err instanceof HttpError && err.statusCode === 404) {
     logger.error(`ERROR 400 message: ${err.message}`);
 
