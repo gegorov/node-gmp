@@ -12,8 +12,14 @@ import groupRoutes from './routes/group-routes';
 import loginRoutes from './routes/login-route';
 
 const port = process.env.APP_PORT;
-const app = express();
+const secret = process.env.JWT_SECRET;
 
+if (!secret) {
+  throw new Error('No secret found');
+}
+
+const app = express();
+app.disable('x-powered-by');
 app.use(cors());
 app.use(morganMiddleWare);
 app.use(express.json());
