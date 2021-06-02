@@ -33,7 +33,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"third more group\",\n    \"permissions\": [\"READ\", \"WRITE\", \"DELETE\", \"SHARE\", \"UPLOAD_FILES\"]\n}",
+							"raw": "{\n    \"name\": \"super group\",\n    \"permissions\": [\"READ\", \"WRITE\", \"DELETE\", \"SHARE\", \"UPLOAD_FILES\"]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -109,6 +109,33 @@
 							"path": [
 								"group",
 								"4fc355b0-e758-49ee-9d3c-00fe2b826fa7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "raw update group",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"updated name\",\n    \"permissions\": [],\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_API_URL}}/group/a28f63bb-27f6-49f5-a9c7-e64efa6e42ef",
+							"host": [
+								"{{BASE_API_URL}}"
+							],
+							"path": [
+								"group",
+								"a28f63bb-27f6-49f5-a9c7-e64efa6e42ef"
 							]
 						}
 					},
@@ -553,6 +580,37 @@
 							],
 							"path": [
 								"all-users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "login",
+			"item": [
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"login\": \"Luke Skywalker\",\n    \"password\": \"nO60cmH8\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_API_URL}}/login",
+							"host": [
+								"{{BASE_API_URL}}"
+							],
+							"path": [
+								"login"
 							]
 						}
 					},
