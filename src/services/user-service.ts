@@ -101,4 +101,16 @@ export class UserService {
     return this.userModel.findAndCountAll()
       .then(searchMapper);
   }
+
+  public login({ login, password }: { login: string, password: string }): Promise<UserInstance> {
+    this.log(`login: ${login}, password: ${password}`, 'login');
+
+    return this.userModel.findOne({ where: { login, password } })
+      .then((user) => {
+        if (!user) {
+          throw createError(401, 'Wrong username/password');
+        }
+        return user;
+      });
+  }
 }

@@ -28,3 +28,10 @@ export interface GroupToUsersRequestSchema extends ValidatedRequestSchema {
     users: string[],
   }
 }
+
+export interface LoginPostRequestSchema extends ValidatedRequestSchema {
+  [ContainerTypes.Fields]: {
+    login: string,
+    password: string,
+  }
+}

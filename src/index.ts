@@ -6,6 +6,7 @@ import { errorHandlerMiddleware, morganMiddleWare, validationErrorhandler } from
 import { sequelize } from './dao/sequelize';
 import userRoutes from './routes/user-routes';
 import groupRoutes from './routes/group-routes';
+import loginRoutes from './routes/login-route';
 
 const port = process.env.APP_PORT;
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use(userRoutes);
 app.use(groupRoutes);
+app.use(loginRoutes);
 
 app.use((req, res, next) => next(createError(404, `404. Not Found. No such url '${req.url}'`)));
 app.use(validationErrorhandler);
