@@ -1,5 +1,5 @@
 import {
-  Request, Response, RequestHandler, NextFunction,
+  Request, Response, NextFunction,
 } from 'express';
 import { ValidatedRequest, ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
 import { User } from '../dao/sequelize';
@@ -21,7 +21,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export const postUser:RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
+export const postUser = async (req: Request, res: Response, next: NextFunction) => {
   const vreq = req as ValidatedRequestWithRawInputsAndFields<UserPostRequestSchema>;
   const { login, password, age } = vreq.body;
 
