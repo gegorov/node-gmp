@@ -1,116 +1,114 @@
 import createError from 'http-errors';
 import { Op } from 'sequelize';
-import { Logger } from 'winston';
+import logger from '../logger';
+import { User } from '../dao/sequelize';
 import { searchMapper } from '../helpers';
 import {
-  UserInstance, UserCreationAttributes, SearchUsersResponse, UserStatic,
+  UserInstance, UserCreationAttributes, SearchUsersResponse,
 } from '../types';
 
-export class UserService {
-  constructor(private userModel: UserStatic, private logger: Logger) {
-    this.userModel = userModel;
-  }
+function log(message: string, methodName?: string): void {
+  logger.info(`[UserService] - [${methodName || ' '}] - ${message}`);
+}
 
-  private log(message: string, methodName?: string): void {
-    this.logger.info(`[UserService] - [${methodName || ' '}] - ${message}`);
-  }
+export function getById(id: string): Promise<UserInstance> {
+  log(`id: ${id}`, 'getById');
 
-  public getById(id: string): Promise<UserInstance> {
-    this.log(`id: ${id}`, 'getById');
+  return User.findByPk(id)
+    .then((user) => {
+      if (!user) {
+        throw createError(404, `User with id: ${id} not found`);
+      }
 
-    return this.userModel.findByPk(id)
-      .then((user) => {
-        if (!user) {
-          throw createError(404, `User with id: ${id} not found`);
-        }
+      return user;
+    });
+}
 
-        return user;
-      });
-  }
+export function create(newUser: UserCreationAttributes): Promise<UserInstance> {
+  log(`login: ${newUser.login}, password: ${newUser.password}, age: ${newUser.age}`, 'create');
 
-  public create(newUser: UserCreationAttributes): Promise<UserInstance> {
-    this.log(`login: ${newUser.login}, password: ${newUser.password}, age: ${newUser.age}`, 'create');
+  return User.create(newUser)
+    .then((user) => {
+      log(`user ${user.login} created, id: ${user.id}, 'create`);
 
-    return this.userModel.create(newUser)
-      .then((user) => {
-        this.log(`user ${user.login} created, id: ${user.id}, 'create`);
+      return user;
+    });
+}
 
-        return user;
-      });
-  }
+export function update(id: string, newUserData: UserCreationAttributes): Promise<UserInstance> {
+  log(`id: ${id}, login: ${newUserData.login}, password: ${newUserData.password}, age: ${newUserData.age}`, 'update');
 
-  public update(id: string, newUserData: UserCreationAttributes): Promise<UserInstance> {
-    this.log(`id: ${id}, login: ${newUserData.login}, password: ${newUserData.password}, age: ${newUserData.age}`, 'update');
+  return getById(id)
+    .then((user) => {
+      if (!user) {
+        throw createError(404, `User with id: ${id} not found`);
+      }
 
-    return this.getById(id)
-      .then((user) => {
-        if (!user) {
-          throw createError(404, `User with id: ${id} not found`);
-        }
+      user.set(newUserData);
 
-        user.set(newUserData);
-
-        return user.save();
-      })
-      .then((user) => {
-        this.log(`user ${user.login} with id ${user.id} was updated`, 'update');
-
-        return user;
-      });
-  }
-
-  public delete(id: string): Promise<UserInstance> {
-    this.log(`id: ${id}`, 'delete');
-
-    return this.getById(id)
-      .then((user) => {
-        if (!user || user.isDeleted) {
-          throw createError(404, `User with id: ${id} not found`);
-        }
-
-        user.set('isDeleted', true);
-
-        return user.save();
-      })
-      .then((user) => {
-        this.log(`user ${user.login} with id ${user.id} was soft deleted`, 'delete');
-        return user;
-      });
-  }
-
-  public search(searchTerm: string, limit: number = 10): Promise<SearchUsersResponse> {
-    this.log(`searchTerm: ${searchTerm}, limit: ${limit}`, 'search');
-
-    return this.userModel.findAndCountAll({
-      limit,
-      where: {
-        login: {
-          [Op.iLike]: `%${searchTerm}%`,
-        },
-      },
+      return user.save();
     })
-      .then(({ rows, count }) => ({
-        total: count,
-        users: rows,
-      }));
-  }
+    .then((user) => {
+      log(`user ${user.login} with id ${user.id} was updated`, 'update');
 
-  public getAll(): Promise<SearchUsersResponse> {
-    this.log(' ', 'getAll');
+      return user;
+    });
+}
 
-    return this.userModel.findAndCountAll()
-      .then(searchMapper);
-  }
+export function deleteUser(id: string): Promise<UserInstance> {
+  log(`id: ${id}`, 'delete');
 
-  public login({ login, password }: { login: string, password: string }): Promise<UserInstance> {
-    this.log(`login: ${login}, password: ${password}`, 'login');
+  return getById(id)
+    .then((user) => {
+      if (!user || user.isDeleted) {
+        throw createError(404, `User with id: ${id} not found`);
+      }
 
-    return this.userModel.findOne({ where: { login, password } })
-      .then((user) => {
-        if (!user) {
-          throw createError(401, 'Wrong username/password');
-        }
-        return user;
-      });
-  }
+      user.set('isDeleted', true);
+
+      return user.save();
+    })
+    .then((user) => {
+      log(`user ${user.login} with id ${user.id} was soft deleted`, 'delete');
+      return user;
+    });
+}
+
+export function search(searchTerm: string, limit: number = 10): Promise<SearchUsersResponse> {
+  log(`searchTerm: ${searchTerm}, limit: ${limit}`, 'search');
+
+  return User.findAndCountAll({
+    limit,
+    where: {
+      login: {
+        [Op.iLike]: `%${searchTerm}%`,
+      },
+    },
+  })
+    .then(({ rows, count }) => ({
+      total: count,
+      users: rows,
+    }));
+}
+
+export function getAll(): Promise<SearchUsersResponse> {
+  log(' ', 'getAll');
+
+  return User.findAndCountAll()
+    .then(searchMapper);
+}
+
+export function loginUser({
+  login,
+  password,
+}: { login: string, password: string }): Promise<UserInstance> {
+  log(`login: ${login}, password: ${password}`, 'login');
+
+  return User.findOne({ where: { login, password } })
+    .then((user) => {
+      if (!user) {
+        throw createError(401, 'Wrong username/password');
+      }
+      return user;
+    });
 }

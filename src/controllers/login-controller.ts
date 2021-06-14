@@ -4,12 +4,10 @@ import {
 import jwt from 'jsonwebtoken';
 import createError from 'http-errors';
 import { ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
-import { User } from '../dao/sequelize';
 import logger from '../logger';
 import { LoginPostRequestSchema } from '../types';
-import { UserService } from '../services/user-service';
+import * as userService from '../services/user-service';
 
-const userService = new UserService(User, logger);
 const secret = process.env.JWT_SECRET;
 const expiresIn = process.env.JWT_EXPIRE || 30;
 
@@ -18,7 +16,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
   const { login, password } = vreq.body;
 
   try {
-    const user = await userService.login({ login, password });
+    const user = await userService.loginUser({ login, password });
     if (!secret) {
       throw createError(500, 'Internal Server Error');
     }
