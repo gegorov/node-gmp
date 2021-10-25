@@ -2,12 +2,9 @@ import {
   Request, Response, NextFunction,
 } from 'express';
 import { ValidatedRequest, ValidatedRequestWithRawInputsAndFields } from 'express-joi-validation';
-import { User } from '../dao/sequelize';
 import logger from '../logger';
 import { UserPostRequestSchema, UsersGetRequestSchema } from '../types';
-import { UserService } from '../services/user-service';
-
-const userService = new UserService(User, logger);
+import * as userService from '../services/user-service';
 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
@@ -52,7 +49,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
   const { id } = req.params;
 
   try {
-    const user = await userService.delete(id);
+    const user = await userService.deleteUser(id);
     res.json(user);
   } catch (error) {
     logger.error(`Error in User Controller, method deleteUser, user id: ${id}. ${error.message}`);
